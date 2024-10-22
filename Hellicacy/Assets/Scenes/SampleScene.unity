@@ -232,7 +232,7 @@ Transform:
   m_GameObject: {fileID: 178006322}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.05, y: -0.256, z: 0}
+  m_LocalPosition: {x: -1.07, y: -0.256, z: 0}
   m_LocalScale: {x: 0.32927424, y: 0.3178559, z: 0.84974}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -482,9 +482,12 @@ MonoBehaviour:
   isDash: 0
   dashAmount: 2
   dashCooldown: 0.3
+  attackPoint: {fileID: 178006323}
+  horizontalAttackDistance: 1.2
+  verticalAttackDistance: 1.5
   currentSpd: 0
   rb: {fileID: 1376444002}
-  facingDirection: 1
+  sr: {fileID: 1376444004}
 --- !u!212 &1376444004
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -528,7 +531,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 9f2f61b5d0448ed429c49c9ef1adf00a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 6.21, y: 9.82}

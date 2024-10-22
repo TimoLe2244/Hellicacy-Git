@@ -11,18 +11,25 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float dashAmount = 3f;
     [SerializeField] float dashCooldown = 2f;
 
+    [SerializeField] Transform attackPoint; // Point where attacks are performed
+
+    // Distances for the attack point on horizontal and vertical directions
+    [SerializeField] float horizontalAttackDistance = 1.2f; 
+    [SerializeField] float verticalAttackDistance = 1.5f;
+
     private bool canDash = true;
     private float lastDashTime; 
     public float currentSpd;
     public Rigidbody2D rb;
+    public SpriteRenderer sr;
     Vector2 movement;
 
-    // Initially set to -1, since the sprite faces left by default
-    public int facingDirection = -1; 
+    // Store facing direction (initially set to left-facing)
+    Vector2 facingDirection = new Vector2(-1, 0);
 
-    // Update is called once per frame
     void Update()
     {
+        // Get movement input
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
 
@@ -31,25 +38,27 @@ public class PlayerMovement : MonoBehaviour
         {
             isDash = true;
         }
+
+        // If there's movement, update the facing direction
+        if (movement != Vector2.zero)
+        {
+            UpdateFacingDirection();
+        }
+
+        if (movement.x > 0)
+        {
+            sr.flipX = true;
+        }
+        else if (movement.x < 0)
+        {
+            sr.flipX=false;
+        }
     }
 
     private void FixedUpdate()
     {
         // Update speed based on sprinting
-        if (TestIfSprinting())
-        {
-            currentSpd = sprintSpd;
-        }
-        else
-        {
-            currentSpd = walkSpd;
-        }
-
-        // Flip the player based on movement direction
-        if ((movement.x > 0 && facingDirection < 0) || (movement.x < 0 && facingDirection > 0))
-        {
-            Flip();
-        }
+        currentSpd = TestIfSprinting() ? sprintSpd : walkSpd;
 
         // Move the player
         rb.MovePosition(rb.position + movement.normalized * currentSpd * Time.fixedDeltaTime);
@@ -63,9 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
     bool TestIfSprinting()
     {
-        if (!canSprint) { return false; }
-
-        return Input.GetKey(KeyCode.LeftShift);
+        return canSprint && Input.GetKey(KeyCode.LeftShift);
     }
 
     void Dash() 
@@ -84,15 +91,25 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Flip()
+    void UpdateFacingDirection()
     {
-        // Reverse the facing direction
-        facingDirection *= -1;
+        // Update facing direction to match current movement
+        facingDirection = movement.normalized;
 
-        // Flip the character's sprite by inverting the x-axis scale
-        Vector3 localScale = transform.localScale;
-        localScale.x *= -1; // Only flip the x-axis, as the sprite originally faces left
-        transform.localScale = localScale;
+        // Move the attack point to the new facing direction
+        RepositionAttackPoint();
+    }
+
+    void RepositionAttackPoint()
+    {
+        // Adjust attack point distance based on direction (horizontal or vertical)
+        Vector2 adjustedDistance = new Vector2(
+            facingDirection.x * horizontalAttackDistance, // Shorter distance for horizontal movement
+            facingDirection.y * verticalAttackDistance     // Longer distance for vertical movement
+        );
+
+        // Set the attack point's position based on the adjusted distance
+        attackPoint.localPosition = adjustedDistance;
     }
 
     IEnumerator DashCooldown()
