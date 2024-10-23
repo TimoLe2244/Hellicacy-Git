@@ -8,8 +8,8 @@ public class EnemyMovement : MonoBehaviour
     private Rigidbody2D rb;
     private Transform player;
     public EnemyState enemyState;
-    public float minPauseDuration = 1f; // minimum time to pause
-    public float maxPauseDuration = 2.5f; // maximum time to pause
+    public float minPauseDuration = .2f; // minimum time to pause
+    public float maxPauseDuration = 1f; // maximum time to pause
     public float minChaseDuration = 3f; // minimum time to chase
     public float maxChaseDuration = 7f;
 

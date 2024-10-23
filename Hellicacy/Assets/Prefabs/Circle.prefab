@@ -165,8 +165,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   enemyState: 0
-  minPauseDuration: 1
-  maxPauseDuration: 2
+  minPauseDuration: 0.2
+  maxPauseDuration: 1
   minChaseDuration: 2
   maxChaseDuration: 6
 --- !u!114 &623713326865049561
