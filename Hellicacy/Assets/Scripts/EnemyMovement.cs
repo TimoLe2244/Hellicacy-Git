@@ -6,17 +6,27 @@ public class EnemyMovement : MonoBehaviour
 {
     public float speed;
     private Rigidbody2D rb;
-    public Transform player;
-    private bool isChasing = true;
+    private Transform player;
     
     public float minPauseDuration = 1f; // minimum time to pause
-    public float maxPauseDuration = 3f; // maximum time to pause
-    public float minChaseDuration = 2f; // minimum time to chase
-    public float maxChaseDuration = 5f; // maximum time to chase
+    public float maxPauseDuration = 2.5f; // maximum time to pause
+    public float minChaseDuration = 3f; // minimum time to chase
+    public float maxChaseDuration = 7f;
+    private bool isChasing = true;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        if(playerObj != null)
+        {
+            player = playerObj.transform;
+        }
+        else{
+            Debug.LogError("Player not found!");
+        }
+
         StartCoroutine(PauseAndChaseRoutine());
     }
 
