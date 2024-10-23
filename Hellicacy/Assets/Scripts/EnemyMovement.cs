@@ -7,12 +7,11 @@ public class EnemyMovement : MonoBehaviour
     public float speed;
     private Rigidbody2D rb;
     private Transform player;
-    
+    public EnemyState enemyState;
     public float minPauseDuration = 1f; // minimum time to pause
     public float maxPauseDuration = 2.5f; // maximum time to pause
     public float minChaseDuration = 3f; // minimum time to chase
     public float maxChaseDuration = 7f;
-    private bool isChasing = true;
 
     void Start()
     {
@@ -26,20 +25,23 @@ public class EnemyMovement : MonoBehaviour
         else{
             Debug.LogError("Player not found!");
         }
-
+        ChangeState(EnemyState.Idle);
         StartCoroutine(PauseAndChaseRoutine());
     }
 
     void Update()
     {
-        if (isChasing)
+        if(enemyState != EnemyState.Knockback)
         {
-            Vector2 direction = (player.position - transform.position).normalized;
-            rb.velocity = direction * speed;
-        }
-        else
-        {
-            rb.velocity = Vector2.zero; // Stop enemy when not chasing
+            if (enemyState == EnemyState.Chasing)
+            {
+                Vector2 direction = (player.position - transform.position).normalized;
+                rb.velocity = direction * speed;
+            }
+            else
+            {
+                rb.velocity = Vector2.zero; // Stop enemy when not chasing
+            }
         }
     }
 
@@ -48,14 +50,25 @@ public class EnemyMovement : MonoBehaviour
         while (true)
         {
             // Pause the enemy for a random duration
-            isChasing = false;
+            ChangeState(EnemyState.Idle);
             float pauseTime = Random.Range(minPauseDuration, maxPauseDuration);
             yield return new WaitForSeconds(pauseTime);
 
             // Chase the player for a random duration
-            isChasing = true;
+            ChangeState(EnemyState.Chasing);
             float chaseTime = Random.Range(minChaseDuration, maxChaseDuration);
             yield return new WaitForSeconds(chaseTime);
         }
     }
+
+    public void ChangeState(EnemyState newState)
+    {
+        enemyState = newState;
+    }
+}
+public enum EnemyState
+{
+    Idle,
+    Chasing,
+    Knockback,
 }

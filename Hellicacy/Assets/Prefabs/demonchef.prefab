@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2650492959340885502}
   - component: {fileID: 2172664846290763291}
-  - component: {fileID: 8937101176084655184}
   - component: {fileID: 1303545496916375686}
   - component: {fileID: 6863102703416211152}
-  - component: {fileID: 5540931101492658408}
+  - component: {fileID: 8937101176084655184}
+  - component: {fileID: 7218487771386944303}
   m_Layer: 0
   m_Name: demonchef
   m_TagString: Player
@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.09, y: -2.89, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5515824617932347709}
@@ -89,27 +89,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8937101176084655184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3319478271937375875}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5701c4b594214524ba3e686597dd38e2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkSpd: 5
-  sprintSpd: 8
-  canSprint: 1
-  isDash: 0
-  dashAmount: 2.5
-  dashCooldown: 0.3
-  currentSpd: 0
-  rb: {fileID: 1303545496916375686}
-  sr: {fileID: 2172664846290763291}
 --- !u!50 &1303545496916375686
 Rigidbody2D:
   serializedVersion: 4
@@ -172,7 +151,7 @@ CapsuleCollider2D:
   m_Offset: {x: -0.052863836, y: -0.22026563}
   m_Size: {x: 0.8227391, y: 1.6955762}
   m_Direction: 0
---- !u!114 &5540931101492658408
+--- !u!114 &8937101176084655184
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -181,12 +160,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 3319478271937375875}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2b1ff106ff04db49b7d6bf07d4f6759, type: 3}
+  m_Script: {fileID: 11500000, guid: 5701c4b594214524ba3e686597dd38e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackPoint: {fileID: 5515824617932347709}
+  walkSpd: 5
+  sprintSpd: 8
+  canSprint: 1
+  isDash: 0
+  dashAmount: 2.5
+  dashCooldown: 0.3
+  currentSpd: 0
+  rb: {fileID: 1303545496916375686}
+  sr: {fileID: 2172664846290763291}
+--- !u!114 &7218487771386944303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3319478271937375875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cabce1a5370f6664cab268a185e9d767, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 0.75
+  attackDamage: 40
+  attackCooldown: 0.35
   horizontalAttackDistance: 1.2
   verticalAttackDistance: 1.5
+  knockbackForce: 8
+  stunTime: 0.3
+  attackPoint: {fileID: 5515824617932347709}
+  enemyLayers:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &7451909494972676607
 GameObject:
   m_ObjectHideFlags: 0

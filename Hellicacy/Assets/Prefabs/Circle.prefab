@@ -13,9 +13,11 @@ GameObject:
   - component: {fileID: 8280965445925107527}
   - component: {fileID: 8199199769430621028}
   - component: {fileID: 7969065991053345174}
-  m_Layer: 0
+  - component: {fileID: 623713326865049561}
+  - component: {fileID: 8854466711405598705}
+  m_Layer: 6
   m_Name: Circle
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -162,7 +164,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 4
+  enemyState: 0
   minPauseDuration: 1
-  maxPauseDuration: 2.5
-  minChaseDuration: 3
-  maxChaseDuration: 7
+  maxPauseDuration: 2
+  minChaseDuration: 2
+  maxChaseDuration: 6
+--- !u!114 &623713326865049561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630841184599831146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3285418aa14f37141ab850d91e5a43e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 200
+--- !u!114 &8854466711405598705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630841184599831146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff82e7112d79b9419c5dae989393dd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

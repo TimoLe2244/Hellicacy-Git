@@ -18,12 +18,12 @@ public class PlayerMovement : MonoBehaviour
     public SpriteRenderer sr;
     Vector2 movement;
 
-    private AttackPointManager attackPointManager;
+    private PlayerCombat playerCombat;
 
 
     void Awake()
     {
-        attackPointManager = GetComponent<AttackPointManager>();
+        playerCombat = GetComponent<PlayerCombat>();
     }
 
     void Update()
@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (movement != Vector2.zero)
         {
-            attackPointManager.UpdateAttackPoint(movement); // Update attack point direction
+            playerCombat.UpdateAttackPoint(movement); // Update attack point direction
         }
 
         if (movement.x > 0)
