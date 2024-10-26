@@ -4,14 +4,27 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-   public int health = 100;
+   [SerializeField] int maxHealth = 100;
+   [SerializeField] int currentHealth;
+   private HealthBar healthBar;
+
+   void Start()
+   {
+        currentHealth = maxHealth;
+        healthBar = FindObjectOfType<HealthBar>();
+   }
 
     public void TakeDamage(int damage)
     {
-        health -= damage;
+        currentHealth -= damage;
         Debug.Log("Player took " + damage + " damage!");
 
-        if (health <= 0)
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealthBar(currentHealth, maxHealth);
+        }
+
+        if (currentHealth <= 0)
         {
             Die();
         }

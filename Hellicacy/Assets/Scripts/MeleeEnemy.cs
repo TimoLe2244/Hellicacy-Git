@@ -6,8 +6,8 @@ public class MeleeEnemy : MonoBehaviour
 {
   public int damage = 10;
     public float attackRange = 1.5f;
-    public float attackCooldown = 1.5f; // Time between attacks
-    public float attackWindUp = 0.5f; // Delay before attack lands
+    public float attackCooldown = 1.5f;
+    public float attackWindUp = 0.5f;
     private float lastAttackTime;
 
     private Transform player;
@@ -31,7 +31,6 @@ public class MeleeEnemy : MonoBehaviour
 
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         
-        // Check if the player is within attack range and attack cooldown has passed
         if (distanceToPlayer <= attackRange && Time.time >= lastAttackTime + attackCooldown)
         {
             StartCoroutine(PerformMeleeAttack());
@@ -41,18 +40,11 @@ public class MeleeEnemy : MonoBehaviour
 
     IEnumerator PerformMeleeAttack()
     {
-        // Optional: Add an attack animation or sound cue here
-        Debug.Log("Preparing melee attack...");
-
-        // Wait for the wind-up time before executing the attack
         yield return new WaitForSeconds(attackWindUp);
 
-        // Make sure the player is still in range after the wind-up (could have moved away)
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         if (distanceToPlayer <= attackRange)
         {
-            // Perform the actual attack
-            Debug.Log("Melee attack hits!");
             player.GetComponent<Player>().TakeDamage(damage);
         }
         else
@@ -63,7 +55,6 @@ public class MeleeEnemy : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        // Visualize the attack range in the editor
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }

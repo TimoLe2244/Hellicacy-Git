@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] bool isDash;
     [SerializeField] float dashAmount = 3f;
     [SerializeField] float dashCooldown = 2f;
+    [SerializeField] LayerMask obstacleLayer; // Set the layer for walls/boundaries in the Inspector
 
     private bool canDash = true;
     private float lastDashTime;
@@ -19,7 +20,6 @@ public class PlayerMovement : MonoBehaviour
     Vector2 movement;
 
     private PlayerCombat playerCombat;
-
 
     void Awake()
     {
@@ -71,7 +71,15 @@ public class PlayerMovement : MonoBehaviour
     {
         if (canDash)
         {
-            rb.MovePosition(rb.position + movement.normalized * dashAmount);
+            // Perform a raycast to check for obstacles in the dash direction
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, movement, dashAmount, obstacleLayer);
+
+            // Calculate the dash distance based on any detected obstacle
+            float dashDistance = hit.collider != null ? hit.distance : dashAmount;
+
+            // Move the player only up to the dash distance, stopping at the wall if detected
+            rb.MovePosition(rb.position + movement.normalized * dashDistance);
+            
             isDash = false;
             lastDashTime = Time.time;
             canDash = false;
