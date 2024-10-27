@@ -14,14 +14,18 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] public Transform attackPoint;
     [SerializeField] private LayerMask enemyLayers;
 
+    public AudioSource audioSource;
+    [SerializeField] public AudioClip attackSound;
 
-    private Vector2 facingDirection = new Vector2(-1, 0); // Default to left
+
+    private Vector2 facingDirection = new Vector2(-1, 0);
     private float lastAttackTime = 0f;
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0) && Time.time >= lastAttackTime + attackCooldown)
         {
+
             Attack();
             lastAttackTime = Time.time;
         }
@@ -29,7 +33,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void Attack()
     {
-        // Trigger attack animation, sounds, etc.
+        audioSource.PlayOneShot(attackSound);
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
@@ -66,4 +70,9 @@ public class PlayerCombat : MonoBehaviour
 
         attackPoint.localPosition = adjustedDistance;
     }
+
+    public Vector2 GetFacingDirection()
+{
+    return facingDirection;
+}
 }

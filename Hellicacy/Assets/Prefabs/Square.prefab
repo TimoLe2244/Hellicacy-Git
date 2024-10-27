@@ -171,6 +171,8 @@ MonoBehaviour:
   minChaseDuration: 3
   maxChaseDuration: 6
   minimumDistance: 0.5
+  isStunned: 0
+  stunDuration: 0.1
 --- !u!114 &7279221919694189064
 MonoBehaviour:
   m_ObjectHideFlags: 0

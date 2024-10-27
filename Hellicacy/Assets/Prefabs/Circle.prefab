@@ -166,11 +166,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 4
   enemyState: 0
-  minPauseDuration: 0.5
-  maxPauseDuration: 1
+  minPauseDuration: 0.1
+  maxPauseDuration: 0.5
   minChaseDuration: 3
   maxChaseDuration: 6
   minimumDistance: 0.5
+  isStunned: 0
+  stunDuration: 0.1
 --- !u!114 &623713326865049561
 MonoBehaviour:
   m_ObjectHideFlags: 0

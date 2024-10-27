@@ -1,12 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
     public float speed;
     private Rigidbody2D rb;
-    private float distance;
     private Transform player;
     public EnemyState enemyState;
     public float minPauseDuration = .2f;
@@ -15,13 +13,12 @@ public class EnemyMovement : MonoBehaviour
     public float maxChaseDuration = 7f;
     public float minimumDistance = .5f;
 
-    public bool isStunned; // Track if the enemy is currently stunned
-    public float stunDuration = 1f; // Duration for which the enemy is stunned
+    public bool isStunned;
+    public float stunDuration = .5f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
         GameObject playerObj = GameObject.FindWithTag("Player");
         if (playerObj != null)
         {
@@ -40,21 +37,19 @@ public class EnemyMovement : MonoBehaviour
     {
         if (isStunned)
         {
-            rb.velocity = Vector2.zero; // Stop movement while stunned
-            return; // Exit the update method
+            rb.velocity = Vector2.zero;
+            return;
         }
 
         if (enemyState == EnemyState.Chasing)
         {
-            distance = Vector2.Distance(transform.position, player.position);
+            float distance = Vector2.Distance(transform.position, player.position);
 
             if (distance > minimumDistance)
             {
                 Vector2 direction = (player.position - transform.position).normalized;
-
+                transform.position = Vector2.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-                transform.position = Vector2.MoveTowards(this.transform.position, player.position, speed * Time.deltaTime);
                 transform.rotation = Quaternion.Euler(Vector3.forward * angle);
             }
         }
@@ -106,17 +101,17 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!isStunned)
         {
-            isStunned = true; // Set the enemy to stunned
-            ChangeState(EnemyState.Stunned); // Change the state to Stunned
-            StartCoroutine(StunCoroutine(duration)); // Start the stun coroutine
+            isStunned = true;
+            ChangeState(EnemyState.Stunned);
+            StartCoroutine(StunCoroutine(duration));
         }
     }
 
     private IEnumerator StunCoroutine(float duration)
     {
-        yield return new WaitForSeconds(duration); // Wait for the stun duration
-        isStunned = false; // Reset stunned state
-        ChangeState(EnemyState.Idle); // Return to idle after stun
+        yield return new WaitForSeconds(duration);
+        isStunned = false;
+        ChangeState(EnemyState.Chasing);
     }
 }
 
@@ -127,4 +122,3 @@ public enum EnemyState
     Knockback,
     Stunned, // New state for stunned enemies
 }
-

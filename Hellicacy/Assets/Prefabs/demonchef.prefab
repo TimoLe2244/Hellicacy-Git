@@ -170,6 +170,9 @@ MonoBehaviour:
   isDash: 0
   dashAmount: 2.5
   dashCooldown: 0.3
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 128
   currentSpd: 0
   rb: {fileID: 1303545496916375686}
   sr: {fileID: 2172664846290763291}
@@ -196,6 +199,8 @@ MonoBehaviour:
   enemyLayers:
     serializedVersion: 2
     m_Bits: 64
+  audioSource: {fileID: 0}
+  attackSound: {fileID: 0}
 --- !u!114 &4961184111481297163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,6 +213,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 197f6219fd56d744b9aeb91352b95513, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 0
 --- !u!1 &7451909494972676607
 GameObject:
   m_ObjectHideFlags: 0

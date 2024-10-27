@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] bool isDash;
     [SerializeField] float dashAmount = 3f;
     [SerializeField] float dashCooldown = 2f;
-    [SerializeField] LayerMask obstacleLayer; // Set the layer for walls/boundaries in the Inspector
+    [SerializeField] LayerMask obstacleLayer;
 
     private bool canDash = true;
     private float lastDashTime;
@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (movement != Vector2.zero)
         {
-            playerCombat.UpdateAttackPoint(movement); // Update attack point direction
+            playerCombat.UpdateAttackPoint(movement);
         }
 
         if (movement.x > 0)
@@ -71,13 +71,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (canDash)
         {
-            // Perform a raycast to check for obstacles in the dash direction
-            RaycastHit2D hit = Physics2D.Raycast(rb.position, movement, dashAmount, obstacleLayer);
+            int originalLayer = gameObject.layer;
 
-            // Calculate the dash distance based on any detected obstacle
+            gameObject.layer = LayerMask.NameToLayer("PlayerDash");
+
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, movement, dashAmount, obstacleLayer);
             float dashDistance = hit.collider != null ? hit.distance : dashAmount;
 
-            // Move the player only up to the dash distance, stopping at the wall if detected
             rb.MovePosition(rb.position + movement.normalized * dashDistance);
             
             isDash = false;
@@ -85,7 +85,14 @@ public class PlayerMovement : MonoBehaviour
             canDash = false;
 
             StartCoroutine(DashCooldown());
+            StartCoroutine(RevertLayer(originalLayer));
         }
+    }
+
+    private IEnumerator RevertLayer(int originalLayer)
+    {
+        yield return new WaitForSeconds(0.1f);
+        gameObject.layer = originalLayer;
     }
 
     IEnumerator DashCooldown()
