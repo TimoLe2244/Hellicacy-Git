@@ -6,12 +6,12 @@ public class Enemy : MonoBehaviour
 {
     public int currentHealth;
     public int maxHealth;
-    private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer
+    private SpriteRenderer spriteRenderer;
 
     void Start()
     {
         currentHealth = maxHealth;
-        spriteRenderer = GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void ChangeHealth(int amount)
@@ -24,13 +24,13 @@ public class Enemy : MonoBehaviour
         }
         else if(currentHealth <= 0)
         {
+
             Die();
         }
     }
 
     private void Die()
     {
-        // Add death behavior here
         Debug.Log(gameObject.name + " died!");
         Destroy(gameObject);
     }

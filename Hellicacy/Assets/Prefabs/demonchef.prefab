@@ -140,7 +140,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.06, y: -3.32, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 2}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7342441233491135499}
@@ -296,9 +296,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cabce1a5370f6664cab268a185e9d767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 0.75
+  attackRange: 0.6
   attackDamage: 20
-  attackCooldown: 0.25
+  attackCooldown: 0.35
   horizontalAttackDistance: 1.1
   verticalAttackDistance: 1.5
   knockbackForce: 8
@@ -324,6 +324,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   currentHealth: 0
+  maxEnergy: 100
+  currentEnergy: 0
+  canCastUlt: 0
 --- !u!114 &4034261871574776128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,16 +339,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d4085ba76afcad4c90a92856f04f6c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  energy: 0
-  maxEnergy: 0
-  damageAmount: 50
+  damageAmount: 80
   attackPoint: {fileID: 7342441233491135499}
   suckInDistance: 10
   damageDelay: 1
   panSpawnDistance: 2
   pullStrength: 10
   pullDuration: 1
-  stunDuration: 1
+  canCastUlt: 0
   panPrefab: {fileID: 6525740553968614167, guid: ec4e119c92d1595449bb6356755839fb, type: 3}
 --- !u!82 &8059914470005925455
 AudioSource:

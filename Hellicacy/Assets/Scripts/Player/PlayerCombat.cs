@@ -44,11 +44,11 @@ public class PlayerCombat : MonoBehaviour
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
-        if (hitEnemies.Length > 0)
+        foreach (Collider2D enemy in hitEnemies)
         {
-            hitEnemies[0].GetComponent<Enemy>().ChangeHealth(-attackDamage);
-            player.GetComponent<Player>().ChangeEnergy(10);
-            hitEnemies[0].GetComponent<EnemyKnockback>().Knockback(transform, knockbackForce, knockbackTime, stunTime);
+            enemy.GetComponent<Enemy>().ChangeHealth(-attackDamage);
+            player.GetComponent<Player>().ChangeEnergy(5);
+            enemy.GetComponent<EnemyKnockback>().Knockback(transform, knockbackForce, knockbackTime, stunTime);
         }
     }
 

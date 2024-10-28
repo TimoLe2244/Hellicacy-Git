@@ -5,7 +5,6 @@ using UnityEngine;
 public class MeleeEnemy : MonoBehaviour
 {
     public int damage = 10;
-
     public int collisionDamage = 5;
     public float attackRange = 1.2f;
     public float attackCooldown = 1.5f;
@@ -31,7 +30,6 @@ public class MeleeEnemy : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            Debug.Log("Player has taken collision dmg");
             collision.gameObject.GetComponent<Player>().ChangeHealth(-collisionDamage);
         }
     }
@@ -56,13 +54,11 @@ public class MeleeEnemy : MonoBehaviour
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         if (distanceToPlayer <= attackRange)
         {
-            Debug.Log("Attack Landed");
             player.GetComponent<Player>().ChangeHealth(-damage);
             player.GetComponent<Player>().ChangeEnergy(5);
         }
         else
         {
-            Debug.Log("Attack missed, player moved out of range.");
         }
     }
 

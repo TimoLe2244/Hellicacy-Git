@@ -7,11 +7,11 @@ public class EnemyMovement : MonoBehaviour
     public float attackRange = 1.2f;
     public LayerMask playerLayer;
 
-    private EnemyState enemyState, newState;
-
+    private EnemyState enemyState;
     private Rigidbody2D rb;
     private Transform player;
 
+    private bool canMove = false; // Track whether the enemy can move
 
     void Start()
     {
@@ -19,12 +19,13 @@ public class EnemyMovement : MonoBehaviour
         GameObject playerObj = GameObject.FindWithTag("Player");
         player = playerObj.transform;
 
-        ChangeState(EnemyState.Idle);
+        // Start the coroutine to delay movement
+        StartCoroutine(StartMovingAfterDelay(1f)); // 1 second delay
     }
 
     void Update()
     {
-        if(enemyState != EnemyState.Knockback)
+        if (enemyState != EnemyState.Knockback && canMove) // Only check for player if canMove is true
         {
             CheckForPlayer();
 
@@ -34,7 +35,7 @@ public class EnemyMovement : MonoBehaviour
             }
             else if (enemyState == EnemyState.Attacking)
             {
-                //attack
+                // Attack
                 rb.velocity = Vector2.zero;
             }
         }
@@ -48,20 +49,34 @@ public class EnemyMovement : MonoBehaviour
 
     private void CheckForPlayer()
     {
-
-        if(Vector2.Distance(transform.position, player.position) <= attackRange)
+        if (Vector2.Distance(transform.position, player.position) <= attackRange)
         {
             ChangeState(EnemyState.Attacking);
         }
-        else if(Vector2.Distance(transform.position, player.position) > attackRange)
+        else if (Vector2.Distance(transform.position, player.position) > attackRange)
         {
-           ChangeState(EnemyState.Chasing); 
-        }    
+            ChangeState(EnemyState.Chasing);
+        }
         else
         {
             rb.velocity = Vector2.zero;
             ChangeState(EnemyState.Idle);
         }
+    }
+
+    private IEnumerator StartMovingAfterDelay(float delay)
+    {
+        // Set enemy state to Idle before starting the movement
+        ChangeState(EnemyState.Idle);
+        
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+        
+        // Allow movement after the delay
+        canMove = true;
+        
+        // Change state to Chasing after the delay
+        ChangeState(EnemyState.Chasing);
     }
 
     public void ChangeState(EnemyState newState)
@@ -77,3 +92,5 @@ public enum EnemyState
     Attacking,
     Knockback
 }
+
+

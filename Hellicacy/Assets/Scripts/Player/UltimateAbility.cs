@@ -25,11 +25,12 @@ public class UltimateAbility : MonoBehaviour
 
     void Update()
     {
-        if(player.canCastUlt == true){
+        if (player.canCastUlt)
+        {
             if (Input.GetKeyDown(KeyCode.U))
             {
                 CastUltimate();
-                player.GetComponent<Player>().ChangeEnergy(-100);
+                player.ChangeEnergy(-100);
             }
         }
     }
@@ -58,30 +59,39 @@ public class UltimateAbility : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
 
-        StartCoroutine(SlidePan(pan));
-        yield return new WaitForSeconds(damageDelay);
-
-        ApplyDamageToEnemies(enemiesInRange);
-        Destroy(pan);
+        if (pan != null) // Check if the pan is still valid before continuing
+        {
+            StartCoroutine(SlidePan(pan));
+            yield return new WaitForSeconds(damageDelay);
+            ApplyDamageToEnemies(enemiesInRange);
+            Destroy(pan);
+        }
     }
 
     private void DisableEnemyCollider(GameObject enemy)
     {
-        Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
-        if (enemyCollider != null)
+        if (enemy != null)
         {
-            enemyCollider.enabled = false;
+            Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+            if (enemyCollider != null)
+            {
+                enemyCollider.enabled = false;
+            }
         }
     }
 
     private IEnumerator PullEnemyToPan(GameObject enemy, Transform panTransform)
     {
+        if (enemy == null || panTransform == null) yield break; // Check if enemy or pan is null
+
         float elapsedTime = 0f;
 
-        while (elapsedTime < pullDuration && panTransform != null)
+        while (elapsedTime < pullDuration)
         {
+            if (enemy == null || panTransform == null) yield break; // Check if enemy or pan is null during the loop
+
             Vector3 directionToPan = (panTransform.position - enemy.transform.position).normalized;
             enemy.transform.position += directionToPan * pullStrength * Time.deltaTime;
 
@@ -89,7 +99,10 @@ public class UltimateAbility : MonoBehaviour
             yield return null;
         }
 
-        enemy.transform.position = panTransform.position;
+        if (enemy != null)
+        {
+            enemy.transform.position = panTransform.position;
+        }
     }
 
     private IEnumerator SlidePan(GameObject pan)
@@ -119,22 +132,27 @@ public class UltimateAbility : MonoBehaviour
         }
     }
 
-
     private void ApplyDamageToEnemies(List<GameObject> enemies)
     {
         foreach (var enemy in enemies)
         {
-            enemy.GetComponent<Enemy>().ChangeHealth(-damageAmount);
-            EnableEnemyCollider(enemy);
+            if (enemy != null)
+            {
+                enemy.GetComponent<Enemy>().ChangeHealth(-damageAmount);
+                EnableEnemyCollider(enemy);
+            }
         }
     }
 
     private void EnableEnemyCollider(GameObject enemy)
     {
-        Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
-        if (enemyCollider != null)
+        if (enemy != null)
         {
-            enemyCollider.enabled = true;
+            Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+            if (enemyCollider != null)
+            {
+                enemyCollider.enabled = true;
+            }
         }
     }
 }
