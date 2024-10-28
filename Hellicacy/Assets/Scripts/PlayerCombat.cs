@@ -18,9 +18,15 @@ public class PlayerCombat : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip attackSound;
 
+    private Player player;
 
     private Vector2 facingDirection = new Vector2(-1, 0);
     private float lastAttackTime = 0f;
+
+    void Start()
+    {
+        player = GetComponent<Player>();
+    }
 
     void Update()
     {
@@ -41,6 +47,7 @@ public class PlayerCombat : MonoBehaviour
         if (hitEnemies.Length > 0)
         {
             hitEnemies[0].GetComponent<Enemy>().ChangeHealth(-attackDamage);
+            player.GetComponent<Player>().ChangeEnergy(10);
             hitEnemies[0].GetComponent<EnemyKnockback>().Knockback(transform, knockbackForce, knockbackTime, stunTime);
         }
     }

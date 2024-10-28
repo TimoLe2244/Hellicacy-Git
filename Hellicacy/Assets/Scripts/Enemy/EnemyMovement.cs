@@ -5,11 +5,8 @@ public class EnemyMovement : MonoBehaviour
 {
     public float speed;
     public float attackRange = 1.2f;
-    public float playerDetectRange = 5;
-    public Transform detectionPoint;
     public LayerMask playerLayer;
 
-    private int facingDirection = -1;
     private EnemyState enemyState, newState;
 
     private Rigidbody2D rb;
@@ -49,30 +46,17 @@ public class EnemyMovement : MonoBehaviour
         rb.velocity = direction * speed;
     }
 
-    void Flip()
-    {
-        facingDirection *= -1;
-        transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
-    }
-
     private void CheckForPlayer()
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(detectionPoint.position, playerDetectRange, playerLayer);
-        
 
-        if(hits.Length > 0)
+        if(Vector2.Distance(transform.position, player.position) <= attackRange)
         {
-            player = hits[0].transform;
-
-            if(Vector2.Distance(transform.position, player.position) <= attackRange)
-            {
-                ChangeState(EnemyState.Attacking);
-            }
-            else if(Vector2.Distance(transform.position, player.position) > attackRange)
-            {
-               ChangeState(EnemyState.Chasing); 
-            }    
+            ChangeState(EnemyState.Attacking);
         }
+        else if(Vector2.Distance(transform.position, player.position) > attackRange)
+        {
+           ChangeState(EnemyState.Chasing); 
+        }    
         else
         {
             rb.velocity = Vector2.zero;

@@ -4,88 +4,79 @@ using System.Collections.Generic;
 
 public class UltimateAbility : MonoBehaviour
 {
-    [SerializeField] public float energy;
-    [SerializeField] public float maxEnergy;
-    [SerializeField] public int damageAmount = 100;
+    [SerializeField] private int damageAmount = 100;
     [SerializeField] private Transform attackPoint;
     [SerializeField] private float suckInDistance = 15f;
     [SerializeField] private float damageDelay = 1f;
     [SerializeField] private float panSpawnDistance = 2f;
     [SerializeField] private float pullStrength = 10f;
     [SerializeField] private float pullDuration = 1f;
-    [SerializeField] private float stunDuration = 1f;
+    public bool canCastUlt;
     public GameObject panPrefab;
 
     private PlayerCombat playerCombat;
+    private Player player;
 
     void Start()
     {
-        playerCombat = GetComponent<PlayerCombat>(); // Get the PlayerCombat component
+        playerCombat = GetComponent<PlayerCombat>();
+        player = GetComponent<Player>();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.U) && energy >= maxEnergy)
-        {
-            CastUltimate();
+        if(player.canCastUlt == true){
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                CastUltimate();
+                player.GetComponent<Player>().ChangeEnergy(-100);
+            }
         }
     }
 
-    void CastUltimate()
+    private void CastUltimate()
     {
-        Vector2 facingDirection = playerCombat.GetFacingDirection(); // Get the player's facing direction
-        Vector3 panPosition = attackPoint.position + (Vector3)facingDirection * panSpawnDistance; // Spawn in facing direction
+        Vector2 facingDirection = playerCombat.GetFacingDirection();
+        Vector3 panPosition = attackPoint.position + (Vector3)facingDirection * panSpawnDistance;
         GameObject pan = Instantiate(panPrefab, panPosition, Quaternion.identity);
         StartCoroutine(SuckEnemiesIntoPan(pan));
     }
 
-    IEnumerator SuckEnemiesIntoPan(GameObject pan)
+    private IEnumerator SuckEnemiesIntoPan(GameObject pan)
     {
-    GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
-    List<GameObject> enemiesInRange = new List<GameObject>();
+        GameObject[] allEnemies = GameObject.FindGameObjectsWithTag("Enemy");
+        List<GameObject> enemiesInRange = new List<GameObject>();
 
-    foreach (var enemy in allEnemies)
-    {
-        float distanceToPan = Vector3.Distance(enemy.transform.position, pan.transform.position);
-        if (distanceToPan <= suckInDistance)
+        foreach (var enemy in allEnemies)
         {
-            enemiesInRange.Add(enemy);
-            
-            // Disable enemy collider
-            Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
-            if (enemyCollider != null)
+            float distanceToPan = Vector3.Distance(enemy.transform.position, pan.transform.position);
+            if (distanceToPan <= suckInDistance)
             {
-                enemyCollider.enabled = false; // Disable the collider
+                enemiesInRange.Add(enemy);
+                DisableEnemyCollider(enemy);
+                StartCoroutine(PullEnemyToPan(enemy, pan.transform));
             }
+        }
 
-            StartCoroutine(PullEnemyToPan(enemy, pan.transform));
+        yield return new WaitForSeconds(1f);
+
+        StartCoroutine(SlidePan(pan));
+        yield return new WaitForSeconds(damageDelay);
+
+        ApplyDamageToEnemies(enemiesInRange);
+        Destroy(pan);
+    }
+
+    private void DisableEnemyCollider(GameObject enemy)
+    {
+        Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+        if (enemyCollider != null)
+        {
+            enemyCollider.enabled = false;
         }
     }
 
-    StartCoroutine(SlidePan(pan)); // Start sliding the pan immediately
-
-    yield return new WaitForSeconds(damageDelay); // Delay before applying damage
-
-    if (pan != null)
-    {
-        foreach (var enemy in enemiesInRange)
-        {
-            enemy.GetComponent<Enemy>().ChangeHealth(-damageAmount);
-            
-            // Re-enable enemy collider after damage
-            Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
-            if (enemyCollider != null)
-            {
-                enemyCollider.enabled = true; // Re-enable the collider
-            }
-        }
-    }
-
-    Destroy(pan);
-    energy = 0;
-    }
-
-    IEnumerator PullEnemyToPan(GameObject enemy, Transform panTransform)
+    private IEnumerator PullEnemyToPan(GameObject enemy, Transform panTransform)
     {
         float elapsedTime = 0f;
 
@@ -101,23 +92,49 @@ public class UltimateAbility : MonoBehaviour
         enemy.transform.position = panTransform.position;
     }
 
-    IEnumerator SlidePan(GameObject pan)
+    private IEnumerator SlidePan(GameObject pan)
     {
+        if (pan == null) yield break;
+
         Vector3 originalPosition = pan.transform.position;
-        float slideDistance = 0.2f; // Increased distance to slide back and forth
-        float slideDuration = 1f; // Increased duration of the sliding effect
+        float slideDistance = 0.5f;
+        float slideDuration = 1f;
         float elapsed = 0f;
 
         while (elapsed < slideDuration)
         {
-            float t = (elapsed / slideDuration);
-            float offset = Mathf.Sin(t * Mathf.PI * 2) * slideDistance; // Smooth back and forth motion
-            pan.transform.position = originalPosition + new Vector3(0, offset, 0); // Slide horizontally
+            if (pan == null) yield break;
+
+            float t = elapsed / slideDuration;
+            float offset = Mathf.Sin(t * Mathf.PI * 4) * slideDistance;
+            pan.transform.position = originalPosition + new Vector3(0, offset, 0);
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        pan.transform.position = originalPosition; // Reset to original position
+        if (pan != null)
+        {
+            pan.transform.position = originalPosition;
+        }
+    }
+
+
+    private void ApplyDamageToEnemies(List<GameObject> enemies)
+    {
+        foreach (var enemy in enemies)
+        {
+            enemy.GetComponent<Enemy>().ChangeHealth(-damageAmount);
+            EnableEnemyCollider(enemy);
+        }
+    }
+
+    private void EnableEnemyCollider(GameObject enemy)
+    {
+        Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
+        if (enemyCollider != null)
+        {
+            enemyCollider.enabled = true;
+        }
     }
 }

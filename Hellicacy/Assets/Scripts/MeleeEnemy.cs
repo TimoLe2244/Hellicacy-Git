@@ -58,6 +58,7 @@ public class MeleeEnemy : MonoBehaviour
         {
             Debug.Log("Attack Landed");
             player.GetComponent<Player>().ChangeHealth(-damage);
+            player.GetComponent<Player>().ChangeEnergy(5);
         }
         else
         {
