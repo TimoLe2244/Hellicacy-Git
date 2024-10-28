@@ -50,7 +50,6 @@ public class UltimateAbility : MonoBehaviour
         if (distanceToPan <= suckInDistance)
         {
             enemiesInRange.Add(enemy);
-            enemy.GetComponent<EnemyMovement>().Stun(stunDuration);
             
             // Disable enemy collider
             Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
@@ -71,7 +70,7 @@ public class UltimateAbility : MonoBehaviour
     {
         foreach (var enemy in enemiesInRange)
         {
-            enemy.GetComponent<Enemy>().TakeDamage(damageAmount);
+            enemy.GetComponent<Enemy>().ChangeHealth(-damageAmount);
             
             // Re-enable enemy collider after damage
             Collider2D enemyCollider = enemy.GetComponent<Collider2D>();

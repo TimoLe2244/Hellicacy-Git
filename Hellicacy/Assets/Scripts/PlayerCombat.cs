@@ -5,17 +5,18 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour
 {
     [SerializeField] private float attackRange = 1.5f;
-    [SerializeField] private int attackDamage = 40;
+    [SerializeField] private int attackDamage = 20;
     [SerializeField] private float attackCooldown = 0.5f;
     [SerializeField] float horizontalAttackDistance = 1.2f;
     [SerializeField] float verticalAttackDistance = 1.5f;
     [SerializeField] public float knockbackForce = 20f;
-    [SerializeField] public float stunTime = .5f;
-    [SerializeField] public Transform attackPoint;
-    [SerializeField] private LayerMask enemyLayers;
+    [SerializeField] public float stunTime = .3f;
+    [SerializeField] public float knockbackTime = .15f;
 
+    [SerializeField] private LayerMask enemyLayers;
+    [SerializeField] public Transform attackPoint;
     public AudioSource audioSource;
-    [SerializeField] public AudioClip attackSound;
+    public AudioClip attackSound;
 
 
     private Vector2 facingDirection = new Vector2(-1, 0);
@@ -37,10 +38,10 @@ public class PlayerCombat : MonoBehaviour
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
 
-        foreach (Collider2D enemy in hitEnemies)
+        if (hitEnemies.Length > 0)
         {
-            enemy.GetComponent<Enemy>().TakeDamage(attackDamage);
-            enemy.GetComponent<EnemyKnockback>().Knockback(transform, knockbackForce, stunTime);
+            hitEnemies[0].GetComponent<Enemy>().ChangeHealth(-attackDamage);
+            hitEnemies[0].GetComponent<EnemyKnockback>().Knockback(transform, knockbackForce, knockbackTime, stunTime);
         }
     }
 

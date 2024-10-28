@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class MeleeEnemy : MonoBehaviour
 {
-  public int damage = 10;
-    public float attackRange = 1.5f;
+    public int damage = 10;
+
+    public int collisionDamage = 5;
+    public float attackRange = 1.2f;
     public float attackCooldown = 1.5f;
     public float attackWindUp = 0.5f;
     private float lastAttackTime;
@@ -22,6 +24,15 @@ public class MeleeEnemy : MonoBehaviour
         else
         {
             Debug.LogError("Player not found!");
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) 
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            Debug.Log("Player has taken collision dmg");
+            collision.gameObject.GetComponent<Player>().ChangeHealth(-collisionDamage);
         }
     }
 
@@ -45,7 +56,8 @@ public class MeleeEnemy : MonoBehaviour
         float distanceToPlayer = Vector2.Distance(transform.position, player.position);
         if (distanceToPlayer <= attackRange)
         {
-            player.GetComponent<Player>().TakeDamage(damage);
+            Debug.Log("Attack Landed");
+            player.GetComponent<Player>().ChangeHealth(-damage);
         }
         else
         {

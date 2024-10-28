@@ -6,36 +6,24 @@ public class EnemyKnockback : MonoBehaviour
     private Rigidbody2D rb;
     private EnemyMovement enemyMovement;
 
-    private void Start()
+    public void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         enemyMovement = GetComponent<EnemyMovement>();
     }
-
-    public void Knockback(Transform playerTransform, float knockbackForce, float stunTime)
+    public void Knockback(Transform playerTransform, float knockbackForce, float knockbackTime, float stunTime)
     {
-        // Only apply knockback if not currently stunned
-        if (!enemyMovement.isStunned)
-        {
-            Vector2 direction = (transform.position - playerTransform.position).normalized;
-            StartCoroutine(ApplyKnockback(direction, knockbackForce, stunTime));
-        }
+        enemyMovement.ChangeState(EnemyState.Knockback);
+        StartCoroutine(StunTimer(knockbackTime, stunTime));
+        Vector2 direction = (transform.position - playerTransform.position).normalized;
+        rb.velocity = direction * knockbackForce;
     }
 
-    private IEnumerator ApplyKnockback(Vector2 direction, float knockbackForce, float stunTime)
+    IEnumerator StunTimer(float knockbackTime, float stunTime)
     {
-        // Apply knockback force
-        rb.velocity = direction * knockbackForce;
-        Debug.Log("Knockback applied");
-
-        // Wait for a brief moment to allow the knockback to take effect
-        yield return new WaitForSeconds(0.1f); // Adjust this duration as necessary
-
-        // Then stun the enemy
-        enemyMovement.ChangeState(EnemyState.Stunned);
+        yield return new WaitForSeconds(knockbackTime);
+        rb.velocity = Vector2.zero;
         yield return new WaitForSeconds(stunTime);
-
-        rb.velocity = Vector2.zero; // Stop movement after stun duration
-        enemyMovement.ChangeState(EnemyState.Idle); // Return to idle state
+        enemyMovement.ChangeState(EnemyState.Idle);
     }
 }

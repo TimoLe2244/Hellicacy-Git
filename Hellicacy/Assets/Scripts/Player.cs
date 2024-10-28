@@ -14,10 +14,9 @@ public class Player : MonoBehaviour
         healthBar = FindObjectOfType<HealthBar>();
    }
 
-    public void TakeDamage(int damage)
+    public void ChangeHealth(int amount)
     {
-        currentHealth -= damage;
-        Debug.Log("Player took " + damage + " damage!");
+        currentHealth += amount;
 
         if (healthBar != null)
         {

@@ -4,24 +4,25 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int health = 100;
+    public int currentHealth;
+    public int maxHealth;
     private SpriteRenderer spriteRenderer; // Reference to the SpriteRenderer
 
     void Start()
     {
+        currentHealth = maxHealth;
         spriteRenderer = GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
     }
 
-    public void TakeDamage(int damage)
+    public void ChangeHealth(int amount)
     {
-        health -= damage;
-        Debug.Log(gameObject.name + " took " + damage + " damage!");
+        currentHealth += amount;
 
-        if (health > 0)
+        if(currentHealth > maxHealth)
         {
-            StartCoroutine(FlashWhite()); // Start the flash coroutine
+            currentHealth = maxHealth;
         }
-        else
+        else if(currentHealth <= 0)
         {
             Die();
         }
@@ -34,7 +35,7 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private IEnumerator FlashWhite()
+    /*private IEnumerator FlashWhite()
     {
         Color originalColor = spriteRenderer.color; // Store the original color
         spriteRenderer.color = Color.white; // Change to white
@@ -43,4 +44,5 @@ public class Enemy : MonoBehaviour
 
         spriteRenderer.color = originalColor; // Reset to original color
     }
+    */
 }
