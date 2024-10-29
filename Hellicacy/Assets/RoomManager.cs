@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RoomManager : MonoBehaviour
 {
     public string enemyTag = "Enemy";
 
+    public GameObject devil;
+
     private Portal portal;
+
+    
+
 
     void Start()
     {
@@ -31,5 +37,10 @@ public class RoomManager : MonoBehaviour
     void AllEnemiesDefeated()
     {
         portal.UnlockPortal();
+
+       if (SceneManager.GetActiveScene().buildIndex == 4)
+        {
+            devil.SetActive(true);
+        }
     }
 }

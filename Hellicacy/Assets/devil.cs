@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class npc : MonoBehaviour
+public class devil : MonoBehaviour
 {
     public GameObject dialoguePanel;
+    public GameObject nextButton;
+    public GameObject contractPanel;
+
     public Text dialogueText;
     public string[] dialogue;
     private int index;
 
-    public GameObject nextButton;
     public float wordSpeed;
     public bool playerIsClose;
 
@@ -34,6 +36,7 @@ public class npc : MonoBehaviour
         }
     }
 
+
     public void NextLine()
     {
         nextButton.SetActive(false);
@@ -46,6 +49,7 @@ public class npc : MonoBehaviour
         }
         else{
             zeroText();
+            OpenContractMenu();
         }
     }
 
@@ -78,6 +82,37 @@ public class npc : MonoBehaviour
         {
             playerIsClose = false;
             zeroText();
+        }
+    }
+
+    private void OpenContractMenu()
+    {
+        contractPanel.SetActive(true);
+    }
+
+    public void OnChoice1Selected()
+    {
+        // Add any logic specific to choice 1
+        CloseContractMenu();
+    }
+
+    public void OnChoice2Selected()
+    {
+        // Add any logic specific to choice 2
+        CloseContractMenu();
+    }
+
+    public void OnChoice3Selected()
+    {
+        // Add any logic specific to choice 3
+        CloseContractMenu();
+    }
+
+    private void CloseContractMenu()
+    {
+        if (contractPanel != null)
+        {
+            contractPanel.SetActive(false);
         }
     }
 }
