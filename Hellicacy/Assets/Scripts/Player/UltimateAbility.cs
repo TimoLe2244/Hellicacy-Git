@@ -56,6 +56,7 @@ public class UltimateAbility : MonoBehaviour
                 enemiesInRange.Add(enemy);
                 DisableEnemyCollider(enemy);
                 StartCoroutine(PullEnemyToPan(enemy, pan.transform));
+                
             }
         }
 
