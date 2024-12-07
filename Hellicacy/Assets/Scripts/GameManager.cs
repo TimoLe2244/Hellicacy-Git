@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     public int currentEnergy;
     private bool statReset;
 
+    public GameObject player;
+    private MonoBehaviour[] playerScripts;
+
     private void Awake()
     {
         if (Instance == null)
@@ -42,14 +45,76 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player");
+        }
+
+        if (player != null)
+        {
+            playerScripts = player.GetComponents<MonoBehaviour>();
+        }
+
         if (scene.name == "restaurant")
         {
             statReset = false;
             ResetPlayerTemporaryStats();
+            EnablePlayerFeatures();
+        }
+        else if (scene.name == "character")
+        {
+            DisablePlayerFeatures();
         }
         else
         {
             statReset = false;
+            EnablePlayerFeatures();
+        }
+    }
+
+    private void DisablePlayerFeatures()
+    {
+        if (player != null)
+        {
+            foreach (MonoBehaviour script in playerScripts)
+            {
+                script.enabled = false;
+            }
+
+            GameObject attackpoint = player.transform.Find("attackpoint")?.gameObject;
+            if (attackpoint != null)
+            {
+                attackpoint.SetActive(false);
+            }
+
+            Debug.Log("Player features disabled in character scene.");
+        }
+        else
+        {
+            Debug.LogWarning("Player object is not assigned.");
+        }
+    }
+
+    private void EnablePlayerFeatures()
+    {
+        if (player != null)
+        {
+            foreach (MonoBehaviour script in playerScripts)
+            {
+                script.enabled = true;
+            }
+
+            GameObject attackpoint = player.transform.Find("attackpoint")?.gameObject;
+            if (attackpoint != null)
+            {
+                attackpoint.SetActive(true);
+            }
+
+            Debug.Log("Player features enabled.");
+        }
+        else
+        {
+            Debug.LogWarning("Player object is not assigned.");
         }
     }
 
@@ -83,8 +148,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("Player has died! Showing death screen...");
         SceneManager.LoadScene(8);
     }
-
 }
+
 
 
 

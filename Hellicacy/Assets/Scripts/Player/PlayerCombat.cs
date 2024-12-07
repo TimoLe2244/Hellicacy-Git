@@ -20,7 +20,7 @@ public class PlayerCombat : MonoBehaviour
 
     private Player player;
 
-    private Vector2 facingDirection = new Vector2(-1, 0);
+    private Vector2 facingDirection = new Vector2(-1, 0); // Default facing direction for idle state
     private float lastAttackTime = 0f;
 
     void Start()
@@ -30,9 +30,11 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
+        // Update the attack point's direction based on the mouse position
+        UpdateAttackPoint();
+
         if (Input.GetMouseButtonDown(0) && Time.time >= lastAttackTime + attackCooldown)
         {
-
             Attack();
             lastAttackTime = Time.time;
         }
@@ -60,13 +62,17 @@ public class PlayerCombat : MonoBehaviour
             Gizmos.DrawWireSphere(attackPoint.position, attackRange);
         }
     }
-    public void UpdateAttackPoint(Vector2 movementDirection)
+
+    public void UpdateAttackPoint()
     {
-        if (movementDirection != Vector2.zero)
-        {
-            facingDirection = movementDirection.normalized;
-            RepositionAttackPoint();
-        }
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0f; // Ensure the z-position is set to 0 for 2D space
+
+        // Calculate direction from player to mouse cursor
+        facingDirection = (mousePosition - transform.position).normalized;
+
+        // Reposition attack point based on the direction
+        RepositionAttackPoint();
     }
 
     private void RepositionAttackPoint()
@@ -80,7 +86,8 @@ public class PlayerCombat : MonoBehaviour
     }
 
     public Vector2 GetFacingDirection()
-{
-    return facingDirection;
+    {
+        return facingDirection;
+    }
 }
-}
+

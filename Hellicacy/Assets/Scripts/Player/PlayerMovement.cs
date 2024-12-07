@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     private float lastDashTime;
     public float currentSpd;
     public Rigidbody2D rb;
-    public SpriteRenderer sr;
+    public SpriteRenderer[] characterSprites;
     Vector2 movement;
 
     private PlayerCombat playerCombat;
@@ -36,18 +36,19 @@ public class PlayerMovement : MonoBehaviour
             isDash = true;
         }
 
-        if (movement != Vector2.zero)
-        {
-            playerCombat.UpdateAttackPoint(movement);
-        }
-
         if (movement.x > 0)
         {
-            sr.flipX = true;
+            foreach (var sprite in characterSprites)
+            {
+                sprite.flipX = true;
+            }
         }
         else if (movement.x < 0)
         {
-            sr.flipX = false;
+            foreach (var sprite in characterSprites)
+            {
+                sprite.flipX = false;
+            }
         }
     }
 
