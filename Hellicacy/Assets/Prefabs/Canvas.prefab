@@ -274,7 +274,7 @@ GameObject:
   - component: {fileID: 8507205733702829230}
   - component: {fileID: 3216200806650221060}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Life3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -536,7 +536,7 @@ GameObject:
   - component: {fileID: 4454938193288486512}
   - component: {fileID: 7536261610264974483}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Life1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -818,7 +818,7 @@ GameObject:
   - component: {fileID: 8070479263383989222}
   - component: {fileID: 6273489266637103820}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Life2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

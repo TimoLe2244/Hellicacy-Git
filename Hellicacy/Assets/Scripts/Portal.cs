@@ -7,6 +7,8 @@ public class Portal : MonoBehaviour
 {
     private bool isUnlocked = false;
     public int sceneBuildIndex;
+    public AudioSource portalSound;  // Reference to the AudioSource for the sound effect
+    private bool playerOnPortal = false;
 
     public void UnlockPortal()
     {
@@ -18,7 +20,30 @@ public class Portal : MonoBehaviour
     {
         if (isUnlocked && other.CompareTag("Player"))
         {
-            SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Single);
+            if (!playerOnPortal)
+            {
+                playerOnPortal = true;
+                portalSound.Play();  // Play the sound effect
+                StartCoroutine(WaitBeforeSceneChange());
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (isUnlocked && other.CompareTag("Player"))
+        {
+            playerOnPortal = false;  // Reset if the player leaves the portal area
+            StopCoroutine(WaitBeforeSceneChange());  // Stop scene change if the player leaves
+        }
+    }
+
+    private IEnumerator WaitBeforeSceneChange()
+    {
+        yield return new WaitForSeconds(1f);  // Wait for 1 second
+        if (playerOnPortal)
+        {
+            SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Single);  // Change scene
         }
     }
 }

@@ -71,19 +71,10 @@ public class PlayerCombat : MonoBehaviour
         // Calculate direction from player to mouse cursor
         facingDirection = (mousePosition - transform.position).normalized;
 
-        // Reposition attack point based on the direction
-        RepositionAttackPoint();
+        // Update attack point position based on facing direction
+        attackPoint.position = transform.position + new Vector3(facingDirection.x * horizontalAttackDistance, facingDirection.y * verticalAttackDistance, 0);
     }
 
-    private void RepositionAttackPoint()
-    {
-        Vector2 adjustedDistance = new Vector2(
-            facingDirection.x * horizontalAttackDistance,
-            facingDirection.y * verticalAttackDistance
-        );
-
-        attackPoint.localPosition = adjustedDistance;
-    }
 
     public Vector2 GetFacingDirection()
     {

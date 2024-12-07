@@ -1,5 +1,7 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,10 +11,21 @@ public class GameManager : MonoBehaviour
     public int currentHealth;
     public int maxEnergy = 100;
     public int currentEnergy;
+    public int lives = 2;
     private bool statReset;
+    private bool isImmune = false;
+    private float immunityDuration = 1f;
 
     public GameObject player;
+    private Vector3 lastPlayerPosition;
     private MonoBehaviour[] playerScripts;
+
+    public Image life1;
+    public Image life2;
+    public Image life3;
+
+    public Color liveColor = Color.white;
+    public Color deadColor = Color.black;
 
     private void Awake()
     {
@@ -31,6 +44,7 @@ public class GameManager : MonoBehaviour
     {
         currentHealth = maxHealth;
         currentEnergy = 0;
+        UpdateLivesUI();
     }
 
     private void OnEnable()
@@ -55,9 +69,12 @@ public class GameManager : MonoBehaviour
             playerScripts = player.GetComponents<MonoBehaviour>();
         }
 
+        life1 = GameObject.Find("Life1Image")?.GetComponent<Image>();
+        life2 = GameObject.Find("Life2Image")?.GetComponent<Image>();
+        life3 = GameObject.Find("Life3Image")?.GetComponent<Image>();
+
         if (scene.name == "restaurant")
         {
-            statReset = false;
             ResetPlayerTemporaryStats();
             EnablePlayerFeatures();
         }
@@ -67,7 +84,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            statReset = false;
             EnablePlayerFeatures();
         }
     }
@@ -120,12 +136,15 @@ public class GameManager : MonoBehaviour
 
     public void ChangeHealth(int amount)
     {
-        currentHealth += amount;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        
-        if (currentHealth <= 0)
+        if (!isImmune)
         {
-            Die();
+            currentHealth += amount;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+            
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
         }
     }
 
@@ -140,15 +159,53 @@ public class GameManager : MonoBehaviour
         currentHealth = maxHealth;
         currentEnergy = 0;
         Debug.Log("Player health reset to full!");
-        statReset = true;
     }
 
     private void Die()
     {
-        Debug.Log("Player has died! Showing death screen...");
-        SceneManager.LoadScene(8);
+        if (lives > 0)
+        {
+            lives--;
+            UpdateLivesUI();
+            lastPlayerPosition = player.transform.position;
+            currentHealth = Mathf.CeilToInt(maxHealth * 0.8f);
+            Debug.Log("Player died but has " + lives + " lives left.");
+            RespawnPlayer();
+        }
+        else
+        {
+            Debug.Log("Player has no lives left!");
+            SceneManager.LoadScene(8);
+        }
+    }
+
+    private void RespawnPlayer()
+    {
+        currentHealth = Mathf.CeilToInt(maxHealth * 0.8f);
+        player.transform.position = lastPlayerPosition;
+        StartCoroutine(GrantTemporaryImmunity());
+        Debug.Log("Player respawned with " + currentHealth + " health.");
+    }
+
+    private void UpdateLivesUI()
+    {
+        life1.color = lives >= 2 ? liveColor : deadColor;
+        life2.color = lives >= 3 ? liveColor : deadColor;
+        life3.color = lives >= 4 ? liveColor : deadColor;
+
+        Debug.Log("Lives left: " + lives);
+    }
+
+    private IEnumerator GrantTemporaryImmunity()
+    {
+        isImmune = true;
+        yield return new WaitForSeconds(immunityDuration);
+        isImmune = false;
+        Debug.Log("Player is no longer immune.");
     }
 }
+
+
 
 
 
