@@ -921,19 +921,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialoguePanel: {fileID: 1134200479}
   dialogueText: {fileID: 2035664780}
-  nextButton: {fileID: 32767299}
-  choicePanel: {fileID: 0}
-  choiceButton1: {fileID: 0}
-  choiceButton2: {fileID: 0}
-  wordSpeed: 0
-  playerIsClose: 0
   dialogue:
   - Wow! Impressive work.
   - I shouldn't really be down here but I come to find potential.
   - You seem like you'd be a great addition to heaven, how does that sound?
   - Well, I'll see ya around!
-  choice1Dialogue: []
-  choice2Dialogue: []
+  nextButton: {fileID: 32767299}
+  wordSpeed: 0
+  playerIsClose: 0
 --- !u!58 &516787843
 CircleCollider2D:
   m_ObjectHideFlags: 0

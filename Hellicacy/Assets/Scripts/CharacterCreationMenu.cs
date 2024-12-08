@@ -21,7 +21,6 @@ public class CharacterCreationMenu : MonoBehaviour
 
     public void Submit()
     {
-        PrefabUtility.SaveAsPrefabAsset(character, "Assets/Prefabs/player.prefab");
         SceneManager.LoadScene("restaurant");
     }
 
