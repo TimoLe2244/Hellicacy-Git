@@ -8,7 +8,7 @@ public class BattleSystem : MonoBehaviour
         Idle,
         Active,
     }
-    [SerializeField] private Transform enemySpawner;
+    [SerializeField] private Wave[] waveArray;
     [SerializeField] private ColliderTrigger colliderTrigger;
     private State state;
     private void Awake()
@@ -26,12 +26,43 @@ public class BattleSystem : MonoBehaviour
         if (state == State.Idle)
         {
             StartBattle();
+            colliderTrigger.OnPlayerEnterBattle -= ColliderTrigger_OnPlayerEnterBattle;
         }
     }
     private void StartBattle()
     {
         Debug.Log("Starting Battle.");
-        enemySpawner.GetComponent<EnemySpawner>().Spawn();
         state = State.Active;
+    }
+
+    private void Update(){
+        switch (state) {
+            case State.Active:
+                foreach (Wave wave in waveArray){
+                wave.Update();
+            }
+            break;
+        }
+    }
+
+    [System.Serializable]
+    private class Wave {
+        [SerializeField] private EnemySpawner[] enemySpawnerArray;
+        [SerializeField] private float timer;
+
+        public void Update(){
+            if (timer >= 0) {
+                timer -= Time.deltaTime;
+                if (timer < 0) {
+                    SpawnEnemies();
+            }
+        }
+    }
+
+        private void SpawnEnemies() {
+            foreach (EnemySpawner enemySpawner in enemySpawnerArray){
+                enemySpawner.Spawn();
+            }
+        }
     }
 }

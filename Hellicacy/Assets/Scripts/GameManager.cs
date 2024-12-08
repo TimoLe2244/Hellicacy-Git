@@ -1,31 +1,24 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-
+    public int playerChoice = 0;
+    private bool betterEffectActive = false;
     public int maxHealth = 100;
     public int currentHealth;
     public int maxEnergy = 100;
     public int currentEnergy;
-    public int lives = 2;
+    public int defaultLives = 1;
+    public int currentLives;
     private bool statReset;
     private bool isImmune = false;
     private float immunityDuration = 1f;
-
     public GameObject player;
     private Vector3 lastPlayerPosition;
     private MonoBehaviour[] playerScripts;
-
-    public Image life1;
-    public Image life2;
-    public Image life3;
-
-    public Color liveColor = Color.white;
-    public Color deadColor = Color.black;
 
     private void Awake()
     {
@@ -44,7 +37,7 @@ public class GameManager : MonoBehaviour
     {
         currentHealth = maxHealth;
         currentEnergy = 0;
-        UpdateLivesUI();
+        currentLives = defaultLives;
     }
 
     private void OnEnable()
@@ -55,6 +48,16 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    public void ActivateBetterEffect()
+    {
+        betterEffectActive = true;
+    }
+
+    public bool IsBetterEffectActive()
+    {
+        return betterEffectActive;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -69,14 +72,11 @@ public class GameManager : MonoBehaviour
             playerScripts = player.GetComponents<MonoBehaviour>();
         }
 
-        life1 = GameObject.Find("Life1Image")?.GetComponent<Image>();
-        life2 = GameObject.Find("Life2Image")?.GetComponent<Image>();
-        life3 = GameObject.Find("Life3Image")?.GetComponent<Image>();
-
         if (scene.name == "restaurant")
         {
             ResetPlayerTemporaryStats();
             EnablePlayerFeatures();
+            ResetBetterEffect();
         }
         else if (scene.name == "character")
         {
@@ -102,12 +102,6 @@ public class GameManager : MonoBehaviour
             {
                 attackpoint.SetActive(false);
             }
-
-            Debug.Log("Player features disabled in character scene.");
-        }
-        else
-        {
-            Debug.LogWarning("Player object is not assigned.");
         }
     }
 
@@ -125,12 +119,6 @@ public class GameManager : MonoBehaviour
             {
                 attackpoint.SetActive(true);
             }
-
-            Debug.Log("Player features enabled.");
-        }
-        else
-        {
-            Debug.LogWarning("Player object is not assigned.");
         }
     }
 
@@ -140,7 +128,6 @@ public class GameManager : MonoBehaviour
         {
             currentHealth += amount;
             currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-            
             if (currentHealth <= 0)
             {
                 Die();
@@ -154,27 +141,33 @@ public class GameManager : MonoBehaviour
         currentEnergy = Mathf.Clamp(currentEnergy, 0, maxEnergy);
     }
 
+    public void ChangeLives(int amount)
+    {
+        currentLives += amount;
+    }
+
     private void ResetPlayerTemporaryStats()
     {
         currentHealth = maxHealth;
         currentEnergy = 0;
-        Debug.Log("Player health reset to full!");
+        currentLives = defaultLives;
     }
 
     private void Die()
     {
-        if (lives > 0)
+        if (currentLives > 0)
         {
-            lives--;
-            UpdateLivesUI();
-            lastPlayerPosition = player.transform.position;
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                player.GetComponent<Player>().ChangeLives(-1);
+            }
             currentHealth = Mathf.CeilToInt(maxHealth * 0.8f);
-            Debug.Log("Player died but has " + lives + " lives left.");
+            lastPlayerPosition = player.transform.position;
             RespawnPlayer();
         }
         else
         {
-            Debug.Log("Player has no lives left!");
             SceneManager.LoadScene(8);
         }
     }
@@ -184,16 +177,35 @@ public class GameManager : MonoBehaviour
         currentHealth = Mathf.CeilToInt(maxHealth * 0.8f);
         player.transform.position = lastPlayerPosition;
         StartCoroutine(GrantTemporaryImmunity());
-        Debug.Log("Player respawned with " + currentHealth + " health.");
+        StartCoroutine(FlashSprites());
     }
 
-    private void UpdateLivesUI()
-    {
-        life1.color = lives >= 2 ? liveColor : deadColor;
-        life2.color = lives >= 3 ? liveColor : deadColor;
-        life3.color = lives >= 4 ? liveColor : deadColor;
+    [SerializeField] private SpriteRenderer[] bodyParts;
 
-        Debug.Log("Lives left: " + lives);
+    private IEnumerator FlashSprites()
+    {
+        int flashes = 4;
+        float flashDuration = 0.1f;
+
+        for (int i = 0; i < flashes; i++)
+        {
+            foreach (SpriteRenderer sr in bodyParts)
+            {
+                sr.color = Color.red;
+            }
+            yield return new WaitForSeconds(flashDuration);
+
+            foreach (SpriteRenderer sr in bodyParts)
+            {
+                sr.color = Color.clear;
+            }
+            yield return new WaitForSeconds(flashDuration);
+        }
+
+        foreach (SpriteRenderer sr in bodyParts)
+        {
+            sr.color = Color.white;
+        }
     }
 
     private IEnumerator GrantTemporaryImmunity()
@@ -201,13 +213,11 @@ public class GameManager : MonoBehaviour
         isImmune = true;
         yield return new WaitForSeconds(immunityDuration);
         isImmune = false;
-        Debug.Log("Player is no longer immune.");
     }
+
+    public void ResetBetterEffect()
+    {
+        betterEffectActive = false;
+    }
+
 }
-
-
-
-
-
-
-

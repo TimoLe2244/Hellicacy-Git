@@ -6,14 +6,23 @@ using UnityEngine.SceneManagement;
 public class Portal : MonoBehaviour
 {
     private bool isUnlocked = false;
+    private bool isLocked = true;
     public int sceneBuildIndex;
-    public AudioSource portalSound;  // Reference to the AudioSource for the sound effect
+    public AudioSource portalSound;
     private bool playerOnPortal = false;
 
     public void UnlockPortal()
     {
         isUnlocked = true;
+        isLocked = false;
         GetComponent<Renderer>().material.color = Color.red;
+    }
+
+    public void LockPortal()
+    {
+        isLocked = true;
+        isUnlocked = false;
+        GetComponent<Renderer>().material.color = Color.white;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -23,7 +32,7 @@ public class Portal : MonoBehaviour
             if (!playerOnPortal)
             {
                 playerOnPortal = true;
-                portalSound.Play();  // Play the sound effect
+                portalSound.Play();
                 StartCoroutine(WaitBeforeSceneChange());
             }
         }
@@ -33,17 +42,17 @@ public class Portal : MonoBehaviour
     {
         if (isUnlocked && other.CompareTag("Player"))
         {
-            playerOnPortal = false;  // Reset if the player leaves the portal area
-            StopCoroutine(WaitBeforeSceneChange());  // Stop scene change if the player leaves
+            playerOnPortal = false;
+            StopCoroutine(WaitBeforeSceneChange());
         }
     }
 
     private IEnumerator WaitBeforeSceneChange()
     {
-        yield return new WaitForSeconds(1f);  // Wait for 1 second
+        yield return new WaitForSeconds(1f);
         if (playerOnPortal)
         {
-            SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Single);  // Change scene
+            SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Single);
         }
     }
 }

@@ -8,13 +8,19 @@ public class devil : MonoBehaviour
     public GameObject dialoguePanel;
     public GameObject nextButton;
     public GameObject contractPanel;
+    public GameObject choice1Button;
+    public GameObject choice2Button;
+    public GameObject choice3Button;
 
     public Text dialogueText;
     public string[] dialogue;
     private int index;
+    public GameObject devil1;
+    private bool healOnDamageActive = false;
 
     public float wordSpeed;
     public bool playerIsClose;
+    private float intimacyLevel;
 
     void Update()
     {
@@ -92,27 +98,52 @@ public class devil : MonoBehaviour
 
     public void OnChoice1Selected()
     {
-        // Add any logic specific to choice 1
+        Debug.Log("Choice 1 selected: Heal on Damage activated!");
+        GameManager.Instance.playerChoice = 1;
         CloseContractMenu();
     }
 
     public void OnChoice2Selected()
     {
-        // Add any logic specific to choice 2
+        Debug.Log("Choice 2 selected: Extra life granted!");
+        GameManager.Instance.playerChoice = 2;
+        
+        GameManager.Instance.ChangeLives(1);
+        
         CloseContractMenu();
     }
 
     public void OnChoice3Selected()
     {
-        // Add any logic specific to choice 3
+        float baseChance = 0.10f;
+        float intimacyBonus = 0.10f * intimacyLevel;
+        float totalChance = baseChance + intimacyBonus;
+
+        float randomValue = Random.value;
+
+        if (randomValue <= totalChance)
+        {
+            GameManager.Instance.ActivateBetterEffect();
+            GameManager.Instance.ChangeLives(2);
+            Debug.Log("Gamble success! You get 1.5x life steal and double extra lives.");
+        }
+        else
+        {
+            GameManager.Instance.ChangeHealth(-GameManager.Instance.maxHealth);
+            Debug.Log("Gamble failed! You die.");
+        }
+
         CloseContractMenu();
-    }
+}
 
     private void CloseContractMenu()
     {
-        if (contractPanel != null)
-        {
-            contractPanel.SetActive(false);
-        }
+        contractPanel.SetActive(false);
+        devil1.SetActive(false);
+    }
+
+    public bool IsHealOnDamageActive()
+    {
+        return healOnDamageActive;
     }
 }

@@ -15,22 +15,26 @@ public class PlayerCombat : MonoBehaviour
 
     [SerializeField] private LayerMask enemyLayers;
     [SerializeField] public Transform attackPoint;
+    [SerializeField] private LayerMask vaseLayer;
     public AudioSource audioSource;
     public AudioClip attackSound;
 
-    private Player player;
+    public float healingAmount;
 
-    private Vector2 facingDirection = new Vector2(-1, 0); // Default facing direction for idle state
+    private Player player;
+    private devil devilScript;
+
+    private Vector2 facingDirection = new Vector2(-1, 0);
     private float lastAttackTime = 0f;
 
     void Start()
     {
+        devilScript = FindObjectOfType<devil>();
         player = GetComponent<Player>();
     }
 
     void Update()
     {
-        // Update the attack point's direction based on the mouse position
         UpdateAttackPoint();
 
         if (Input.GetMouseButtonDown(0) && Time.time >= lastAttackTime + attackCooldown)
@@ -42,15 +46,57 @@ public class PlayerCombat : MonoBehaviour
 
     private void Attack()
     {
-        audioSource.PlayOneShot(attackSound);
+        if (audioSource != null && attackSound != null)
+        {
+            audioSource.PlayOneShot(attackSound);
+        }
+
+        if (attackPoint == null)
+        {
+            Debug.LogError("Attack point is not assigned.");
+            return;
+        }
 
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
-
         foreach (Collider2D enemy in hitEnemies)
         {
-            enemy.GetComponent<Enemy>().ChangeHealth(-attackDamage);
-            player.GetComponent<Player>().ChangeEnergy(5);
-            enemy.GetComponent<EnemyKnockback>().Knockback(transform, knockbackForce, knockbackTime, stunTime);
+            Enemy enemyComponent = enemy.GetComponent<Enemy>();
+            if (enemyComponent != null)
+            {
+                enemyComponent.ChangeHealth(-attackDamage);
+
+                if (GameManager.Instance.playerChoice == 1 || GameManager.Instance.playerChoice == 3)
+                {
+                    healingAmount = attackDamage * 0.2f;
+                    if (GameManager.Instance.IsBetterEffectActive())
+                    {
+                        healingAmount *= 1.5f;
+                    }
+
+                    player.ChangeHealth((int)healingAmount);
+                    Debug.Log($"Player healed for {healingAmount} health!");
+                }
+
+                player.ChangeEnergy(2);
+            }
+            else
+            {
+                Debug.LogError("No Enemy component found on " + enemy.name);
+            }
+        }
+
+        Collider2D[] hitVases = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, vaseLayer);
+        foreach (Collider2D vase in hitVases)
+        {
+            Vase vaseScript = vase.GetComponent<Vase>();
+            if (vaseScript != null)
+            {
+                vaseScript.ChangeHealth(-attackDamage);
+            }
+            else
+            {
+                Debug.LogError("No Vase component found on " + vase.name);
+            }
         }
     }
 
@@ -66,12 +112,10 @@ public class PlayerCombat : MonoBehaviour
     public void UpdateAttackPoint()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 0f; // Ensure the z-position is set to 0 for 2D space
+        mousePosition.z = 0f;
 
-        // Calculate direction from player to mouse cursor
         facingDirection = (mousePosition - transform.position).normalized;
 
-        // Update attack point position based on facing direction
         attackPoint.position = transform.position + new Vector3(facingDirection.x * horizontalAttackDistance, facingDirection.y * verticalAttackDistance, 0);
     }
 
@@ -80,5 +124,6 @@ public class PlayerCombat : MonoBehaviour
     {
         return facingDirection;
     }
+
 }
 

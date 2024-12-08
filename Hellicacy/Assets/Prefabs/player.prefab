@@ -158,7 +158,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 9
-  m_Sprite: {fileID: 21300000, guid: 65990055073fc9a4da58f22b919ab38b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e921e1575f3692b40a28271a75fb6dbc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -266,7 +266,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 6.21, y: 9.82}
+  m_Size: {x: 1.7742857, y: 2.8057144}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -345,7 +345,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 40db1b782c7638d4a83c80033e541105, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 21f62075343c7e745aa074bde2b9dcd2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -454,6 +454,7 @@ GameObject:
   - component: {fileID: 3188976558639775771}
   - component: {fileID: 563133721467076189}
   - component: {fileID: 8492955960917793162}
+  - component: {fileID: 5892615049788939797}
   - component: {fileID: 7341390682929849689}
   - component: {fileID: 1762720674260184400}
   m_Layer: 9
@@ -607,8 +608,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   attackPoint: {fileID: 4999837646692774216}
+  vaseLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   audioSource: {fileID: 1762720674260184400}
   attackSound: {fileID: 8300000, guid: 63ce9b64928c24540b349dc72f581256, type: 3}
+  healingAmount: 0
 --- !u!114 &8492955960917793162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -622,6 +627,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canCastUlt: 0
+--- !u!114 &5892615049788939797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4096170836318367026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 651b4c7740fb39c44b25a67e3d1ecfa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7341390682929849689
 MonoBehaviour:
   m_ObjectHideFlags: 0

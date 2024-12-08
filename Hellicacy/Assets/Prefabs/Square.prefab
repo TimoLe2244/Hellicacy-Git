@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 3860081154225852353}
   - component: {fileID: 2495204335090192557}
   - component: {fileID: 6350159652048478605}
+  - component: {fileID: 3318122244899199766}
   m_Layer: 6
   m_Name: Square
   m_TagString: Enemy
@@ -217,8 +218,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850a6c0709461654dadf29bbf32f428e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 9
   collisionDamage: 10
   attackRange: 1.2
   attackCooldown: 1.5
   attackWindUp: 0.5
+--- !u!114 &3318122244899199766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7283499018205977155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4f6e065d531d5e4ab0972f12f90db41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  droppedItemPrefab: {fileID: 7543704434859126469, guid: 941703477ec12fc4a8b20c5e749ed033, type: 3}
+  lootlist:
+  - {fileID: 11400000, guid: 8295f6b97fbfb294fbe25959b2b3bf4c, type: 2}
+  - {fileID: 11400000, guid: d2119aae7b105b34cb6c45aa15debdca, type: 2}
+  - {fileID: 11400000, guid: 6efc6282bb8168d4fac23b176f659f20, type: 2}
+  - {fileID: 11400000, guid: a4471f3997fc7bf4db6637a52e40749e, type: 2}

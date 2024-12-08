@@ -31,18 +31,9 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        GetComponent<LootBag>().InstantiateLoot(transform.position);
         Debug.Log(gameObject.name + " died!");
         Destroy(gameObject);
-    }
-
-    private IEnumerator FlashWhite()
-    {
-        Color originalColor = spriteRenderer.color; // Store the original color
-        spriteRenderer.color = Color.white; // Change to white
-
-        yield return new WaitForSeconds(0.1f); // Wait for a short duration
-
-        spriteRenderer.color = originalColor; // Reset to original color
     }
     
 }

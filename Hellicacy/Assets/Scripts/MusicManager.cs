@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
-    public AudioClip[] musicTracks; // List of all available music tracks
+    public AudioClip[] musicTracks;
     private AudioSource audioSource;
     private int currentTrackIndex = -1;
 
-    public float fadeDuration = 1.0f; // Duration for fade-in/out (in seconds)
+    public float fadeDuration = 1.0f;
 
     void Awake()
     {
@@ -16,7 +16,8 @@ public class MusicManager : MonoBehaviour
 
     void Start()
     {
-        PlayRandomTrack(); // Start playing a random track when the game begins
+        PlayRandomTrack();
+        LoadMusicVolume();
     }
 
     public void PlayRandomTrack()
@@ -28,41 +29,39 @@ public class MusicManager : MonoBehaviour
         do
         {
             randomIndex = Random.Range(0, musicTracks.Length);
-        } while (randomIndex == currentTrackIndex); // Avoid repeating the same track
+        } while (randomIndex == currentTrackIndex);
 
         currentTrackIndex = randomIndex;
-        StartCoroutine(FadeOutAndIn(musicTracks[randomIndex])); // Fade in the new track
+        StartCoroutine(FadeOutAndIn(musicTracks[randomIndex]));
     }
 
     IEnumerator FadeOutAndIn(AudioClip newClip)
     {
-        yield return StartCoroutine(FadeOut()); // Fade out the current music
-        audioSource.clip = newClip; // Set the new track
-        audioSource.Play(); // Start playing the new track
-        yield return StartCoroutine(FadeIn()); // Fade it in
+        yield return StartCoroutine(FadeOut());
+        audioSource.clip = newClip;
+        audioSource.Play();
+        yield return StartCoroutine(FadeIn());
     }
 
     IEnumerator FadeOut()
     {
         float startVolume = audioSource.volume;
 
-        // Fade out the current music
         while (audioSource.volume > 0)
         {
             audioSource.volume -= startVolume * Time.deltaTime / fadeDuration;
             yield return null;
         }
 
-        audioSource.Stop(); // Stop the current track once it's faded out
-        audioSource.volume = startVolume; // Restore volume for fade-in
+        audioSource.Stop();
+        audioSource.volume = startVolume;
     }
 
     IEnumerator FadeIn()
     {
         audioSource.volume = 0.05f;
-        float targetVolume = 0.25f;
+        float targetVolume = PlayerPrefs.GetFloat("MusicVolume", 0.25f);
 
-        // Fade in the new track
         while (audioSource.volume < targetVolume)
         {
             audioSource.volume += targetVolume * Time.deltaTime / fadeDuration;
@@ -70,6 +69,12 @@ public class MusicManager : MonoBehaviour
         }
 
         audioSource.volume = targetVolume;
+    }
+
+    private void LoadMusicVolume()
+    {
+        float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.25f);
+        audioSource.volume = musicVolume;
     }
 }
 

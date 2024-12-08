@@ -688,6 +688,7 @@ GameObject:
   - component: {fileID: 6449614096019390802}
   - component: {fileID: 6806663856299035904}
   - component: {fileID: 7295221172022980009}
+  - component: {fileID: 1690392699869250054}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -806,6 +807,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   energyBarFill: {fileID: 276104701056802165}
+--- !u!114 &1690392699869250054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5486167400629364518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e3330ff8c08c914e9343f70b0caaa68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  life1: {fileID: 7536261610264974483}
+  life2: {fileID: 6273489266637103820}
+  life3: {fileID: 3216200806650221060}
+  liveColor: {r: 1, g: 1, b: 1, a: 1}
+  deadColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &6035547645428327117
 GameObject:
   m_ObjectHideFlags: 0
